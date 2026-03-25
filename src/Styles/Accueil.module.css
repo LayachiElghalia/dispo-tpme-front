@@ -1,0 +1,324 @@
+/* Accueil.module.css */
+.page {}
+.section { padding: 64px 24px; }
+.sectionInner { max-width: 1240px; margin: 0 auto; }
+
+/* ── Hero ── */
+/* Accueil.module.css — remplacez uniquement le bloc .hero et ajoutez les nouvelles classes */
+
+.hero {
+  position: relative;
+  color: white;
+  padding: 72px 24px 64px;
+  overflow: hidden;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  background: #0f1f5c; /* fallback si la vidéo ne charge pas */
+}
+
+/* ── Vidéo de fond ── */
+.heroVideo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  z-index: 0;
+}
+
+/* ── Overlay sombre pour garder le texte lisible ── */
+.heroOverlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(10, 18, 48, 0.82) 0%,    /* gauche très sombre */
+    rgba(26, 43, 107, 0.65) 50%,  /* centre bleu marine semi-transparent */
+    rgba(10, 18, 48, 0.75) 100%   /* droite sombre */
+  );
+  z-index: 1;
+}
+
+/* ── Tout le contenu passe au-dessus de la vidéo et de l'overlay ── */
+.heroInner {
+  max-width: 1240px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 2;
+  width: 100%;
+}
+
+/* ── Le reste de vos classes hero restent inchangées ── */
+
+.heroBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255,255,255,.1);
+  border: 1px solid rgba(255,255,255,.18);
+  border-radius: 100px;
+  padding: 7px 18px;
+  font-size: 12.5px;
+  font-weight: 500;
+  margin-bottom: 24px;
+}
+.heroBadgeDot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--gold-400);
+  animation: pulse 2s infinite;
+  flex-shrink: 0;
+}
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.35} }
+
+.heroTitle {
+  font-family: var(--font-display);
+  font-size: clamp(28px, 4.5vw, 50px);
+  font-weight: 800;
+  line-height: 1.15;
+  max-width: 720px;
+  margin-bottom: 18px;
+  letter-spacing: .2px;
+}
+.heroEm { color: var(--gold-400); font-style: normal; }
+
+.heroSubtitle {
+  font-size: 16px;
+  opacity: .85;
+  max-width: 580px;
+  margin-bottom: 36px;
+  font-weight: 300;
+  line-height: 1.75;
+}
+.heroSubtitle strong { font-weight: 700; color: var(--gold-400); }
+
+.heroCta { display: flex; gap: 12px; flex-wrap: wrap; }
+
+.heroStats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background: rgba(255,255,255,.1);
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  margin-top: 56px;
+  max-width: 560px;
+}
+.heroStat {
+  background: rgba(255,255,255,.06);
+  padding: 22px 24px;
+  text-align: center;
+}
+.heroStat strong {
+  font-family: var(--font-display);
+  font-size: 30px;
+  font-weight: 800;
+  color: var(--gold-400);
+  display: block;
+  line-height: 1;
+}
+.heroStat span {
+  font-size: 11px;
+  opacity: .65;
+  display: block;
+  margin-top: 5px;
+  line-height: 1.3;
+}
+
+/* ── Info strip ── */
+.infoStrip {
+  background: var(--gold-500);
+  padding: 13px 24px;
+}
+.infoStripInner {
+  max-width: 1240px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13.5px;
+  font-weight: 500;
+  color: #3d2800;
+}
+.infoStripInner a {
+  color: #3d2800;
+  font-weight: 700;
+  text-decoration: underline;
+}
+
+/* ── Dispositifs ── */
+.dispositifsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+}
+.dispositifCard {
+  background: var(--white);
+  border-radius: var(--r-lg);
+  border: 1px solid var(--gray-100);
+  border-top: 4px solid var(--gray-200);
+  padding: 24px 22px;
+  box-shadow: var(--shadow-xs);
+  transition: box-shadow .25s, transform .25s;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.dispositifCard:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+.dispositifHighlight {
+  border-top-color: var(--navy-700);
+  box-shadow: var(--shadow-sm);
+}
+.dispositifNum {
+  font-family: var(--font-display);
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--gray-200);
+  line-height: 1;
+}
+.dispositifHighlight .dispositifNum { color: var(--navy-100); }
+.dispositifIcon { font-size: 26px; }
+.dispositifTitle {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--navy-700);
+  line-height: 1.3;
+}
+.dispositifDesc { font-size: 13px; color: var(--gray-500); line-height: 1.55; flex: 1; }
+
+/* ── Primes ── */
+.primesGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 20px;
+}
+.primeCard {
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+}
+.primeCardHeader {
+  padding: 22px 22px 18px;
+  color: white;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.primeCardHeader h3 {
+  font-family: var(--font-display);
+  font-size: 17px;
+  font-weight: 700;
+}
+.primeCardIcon { font-size: 28px; }
+.primeCard_navy .primeCardHeader  { background: var(--navy-700); }
+.primeCard_blue .primeCardHeader  { background: #1d4ed8; }
+.primeCard_red  .primeCardHeader  { background: var(--red-600); }
+
+.primeCardBody { background: var(--white); padding: 18px 20px; }
+.primeRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 12px;
+  background: var(--gray-50);
+  border-radius: var(--r-sm);
+  font-size: 13.5px;
+  margin-bottom: 8px;
+}
+.primeRow:last-child { margin-bottom: 0; }
+.primeRow strong {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--navy-700);
+}
+.primeRowHighlight {
+  background: var(--navy-100);
+  border: 1px solid var(--navy-100);
+}
+.primeRowHighlight strong { color: var(--navy-700); }
+.primeNote { font-size: 12px; color: var(--gray-500); margin-top: 12px; line-height: 1.5; }
+
+/* Plafond banner */
+.plafondBanner {
+  margin-top: 20px;
+  background: var(--navy-700);
+  border-radius: var(--r-lg);
+  padding: 22px 28px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+.plafondLabel { font-size: 12px; color: rgba(255,255,255,.55); margin-bottom: 4px; }
+.plafondVal {
+  font-family: var(--font-display);
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--gold-400);
+}
+.plafondVal span {
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 400;
+  color: rgba(255,255,255,.7);
+  margin-left: 10px;
+}
+
+/* ── Quick access ── */
+.quickAccess { background: var(--navy-700); padding: 44px 24px; }
+.quickHeader { margin-bottom: 24px; }
+.quickHeader p {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: rgba(255,255,255,.5);
+  margin-bottom: 4px;
+}
+.quickHeader h2 {
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--white);
+}
+.quickGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 12px;
+}
+.quickBtn {
+  background: rgba(255,255,255,.07);
+  border: 1px solid rgba(255,255,255,.12);
+  border-radius: var(--r-md);
+  padding: 16px 14px;
+  color: rgba(255,255,255,.85);
+  text-align: center;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background .2s, border-color .2s;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-body);
+}
+.quickBtn:hover {
+  background: rgba(255,255,255,.13);
+  border-color: rgba(255,255,255,.25);
+  color: var(--white);
+}
+.quickIcon { font-size: 22px; opacity: .85; }
+
+@media (max-width: 640px) {
+  .heroStats { grid-template-columns: 1fr; }
+  .heroCta { flex-direction: column; }
+  .plafondBanner { flex-direction: column; align-items: flex-start; }
+}
