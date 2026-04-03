@@ -4,6 +4,12 @@ import { useNavigate } from 'react-router-dom';
 import { DOCUMENTS_REQUIS } from '../data/index.js';
 import { SectionHeader, Breadcrumb, Button, Alert } from '../Components/Index.jsx';
 import styles from '../Styles/Dossier.module.css';
+{/*import pin from '../Assets/pin.png';
+import money from '../Assets/money-bag.png';
+import planning from '../Assets/planning.png';
+import location from '../Assets/location.png';
+import factory from '../Assets/factory.png';
+import building from '../Assets/building.png';*/}
 
  function Dossier() {
   const navigate  = useNavigate();

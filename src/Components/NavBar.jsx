@@ -20,7 +20,7 @@ function Navbar() {
   return (
     <>
       {/* Top strip */}
-      <div className={styles.topbar}>
+     {/*} <div className={styles.topbar}>
         <div className={styles.topbarInner}>
           <span>Ministère de l'Investissement, de la Convergence et de l'Évaluation des Politiques Publiques</span>
           <div className={styles.topbarLinks}>
@@ -32,7 +32,7 @@ function Navbar() {
             </span>
           </div>
         </div>
-      </div>
+      </div> */}
 
       {/* Main nav */}
       <nav className={styles.nav}>
@@ -63,7 +63,7 @@ function Navbar() {
               </NavLink>
             ))}
             <NavLink
-              to="/espace"
+              to="/login"
               className={({ isActive }) =>
                 `${styles.link} ${styles.linkCta} ${isActive ? styles.linkActive : ''}`
               }

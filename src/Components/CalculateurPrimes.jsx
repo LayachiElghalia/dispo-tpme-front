@@ -88,7 +88,6 @@ const SECTEURS_BRANCHES = {
   ],
 };
 
-// Branches ayant des activités prioritaires (donnent droit à +10%)
 const BRANCHES_PRIORITAIRES = new Set([
   "Aquaculture en mer et zone littorale",
   "Aquaculture en eau douce",
@@ -125,12 +124,8 @@ const BRANCHES_PRIORITAIRES = new Set([
   "Activités récréatives et de loisirs",
 ]);
 
-// Secteurs considérés comme "tourisme" (seuil ratio = 1 au lieu de 1.5)
-const SECTEURS_TOURISME = new Set([
-  "Hébergement et restauration",
-]);
+const SECTEURS_TOURISME = new Set(["Hébergement et restauration"]);
 
-// Provinces LSH avec leur catégorie territoriale
 const PROVINCES_LSH = {
   "Laâyoune": "A",
   "Boujdour": "B",
@@ -148,7 +143,6 @@ function formatMAD(n) {
 function calcPrimes({ investissement, emplois, province, branche, secteur, activitePrioritaire }) {
   const inv = parseFloat(investissement) || 0;
   const emp = parseInt(emplois) || 0;
-
   if (inv <= 0) return null;
 
   const primable = Math.min(inv, 50_000_000);
@@ -157,7 +151,6 @@ function calcPrimes({ investissement, emplois, province, branche, secteur, activ
   const seuilMin = isTourisme ? 1 : 1.5;
   const ratioEligible = ratio >= seuilMin;
 
-  // Prime emploi
   let pctEmploi = 0;
   if (ratioEligible) {
     if (ratio >= 2  && ratio <= 5)  pctEmploi = 5;
@@ -165,45 +158,32 @@ function calcPrimes({ investissement, emplois, province, branche, secteur, activ
     if (ratio > 10)                  pctEmploi = 10;
   }
 
-  // Prime territoriale
   const categorie = PROVINCES_LSH[province] || null;
   const pctTerrit = categorie === 'A' ? 10 : categorie === 'B' ? 15 : 0;
-
-  // Prime activités prioritaires
-  const pctPrio = activitePrioritaire && BRANCHES_PRIORITAIRES.has(branche) ? 10 : 0;
-
-  const pctTotal = Math.min(pctEmploi + pctTerrit + pctPrio, 30);
+  const pctPrio   = activitePrioritaire && BRANCHES_PRIORITAIRES.has(branche) ? 10 : 0;
+  const pctTotal  = Math.min(pctEmploi + pctTerrit + pctPrio, 30);
   const montantTotal = (primable * pctTotal) / 100;
 
   return {
-    primable,
-    ratio: Math.round(ratio * 100) / 100,
-    ratioEligible,
-    seuilMin,
-    categorie,
-    pctEmploi,
-    pctTerrit,
-    pctPrio,
-    pctTotal,
-    montantEmploi:  (primable * pctEmploi) / 100,
-    montantTerrit:  (primable * pctTerrit) / 100,
-    montantPrio:    (primable * pctPrio) / 100,
+    primable, ratio: Math.round(ratio * 100) / 100,
+    ratioEligible, seuilMin, categorie,
+    pctEmploi, pctTerrit, pctPrio, pctTotal,
+    montantEmploi: (primable * pctEmploi) / 100,
+    montantTerrit: (primable * pctTerrit) / 100,
+    montantPrio:   (primable * pctPrio)   / 100,
     montantTotal,
     estPrioritaire: BRANCHES_PRIORITAIRES.has(branche),
   };
 }
 
-// ─── Composant principal ───────────────────────────────────────────────────
+// ─── Composant ─────────────────────────────────────────────────────────────
 
 export default function CalculateurPrimes() {
   const [form, setForm] = useState({
-    secteur: '',
-    branche: '',
-    province: '',
-    investissement: '',
-    emplois: '',
-    activitePrioritaire: false,
+    secteur: '', branche: '', province: '',
+    investissement: '', emplois: '', activitePrioritaire: false,
   });
+  const [errors,     setErrors]     = useState({});
   const [calculated, setCalculated] = useState(false);
 
   const set = (key) => (e) =>
@@ -213,23 +193,53 @@ export default function CalculateurPrimes() {
       ...(key === 'secteur' ? { branche: '' } : {}),
     }));
 
-  const branches = form.secteur ? SECTEURS_BRANCHES[form.secteur] || [] : [];
+  const branches       = form.secteur ? SECTEURS_BRANCHES[form.secteur] || [] : [];
   const estPrioritaire = BRANCHES_PRIORITAIRES.has(form.branche);
+
+  // ── Validation ──────────────────────────────────────────────────────────
+  const handleCalculer = () => {
+    const newErrors = {};
+    const inv = parseFloat(form.investissement) || 0;
+    const emp = parseInt(form.emplois)          || 0;
+
+    if (!form.secteur)
+      newErrors.secteur = "Veuillez sélectionner un secteur d'activité.";
+
+    if (!form.branche)
+      newErrors.branche = "Veuillez sélectionner une branche d'activité.";
+
+    if (!form.province)
+      newErrors.province = "Veuillez sélectionner une province.";
+
+    if (!form.investissement || inv <= 0)
+      newErrors.investissement = "Veuillez saisir un montant d'investissement.";
+    else if (inv < 1_000_000)
+      newErrors.investissement = "Le montant minimum est 1 000 000 MAD.";
+    else if (inv >= 50_000_000)
+      newErrors.investissement = "Le montant doit être inférieur à 50 000 000 MAD.";
+
+    if (!form.emplois || emp < 1)
+      newErrors.emplois = "Veuillez saisir au moins 1 emploi stable prévu.";
+
+    setErrors(newErrors);
+
+    if (Object.keys(newErrors).length === 0) {
+      setCalculated(true);
+    } else {
+      setCalculated(false);
+    }
+  };
+
+  const handleReset = () => {
+    setForm({ secteur: '', branche: '', province: '', investissement: '', emplois: '', activitePrioritaire: false });
+    setErrors({});
+    setCalculated(false);
+  };
 
   const result = useMemo(() => {
     if (!calculated) return null;
     return calcPrimes(form);
   }, [form, calculated]);
-
-  const handleCalculer = () => {
-    if (!form.secteur || !form.branche || !form.province || !form.investissement || !form.emplois) return;
-    setCalculated(true);
-  };
-
-  const handleReset = () => {
-    setForm({ secteur: '', branche: '', province: '', investissement: '', emplois: '', activitePrioritaire: false });
-    setCalculated(false);
-  };
 
   return (
     <section className={styles.section}>
@@ -260,31 +270,42 @@ export default function CalculateurPrimes() {
               <div className={styles.grid2}>
                 <div className={styles.formGroup}>
                   <label>Secteur d'activité <span className={styles.req}>*</span></label>
-                  <select value={form.secteur} onChange={set('secteur')}>
+                  <select
+                    value={form.secteur}
+                    onChange={set('secteur')}
+                    className={errors.secteur ? styles.inputError : ''}
+                  >
                     <option value="">-- Sélectionner --</option>
                     {Object.keys(SECTEURS_BRANCHES).map(s => (
                       <option key={s} value={s}>{s}</option>
                     ))}
                   </select>
+                  {errors.secteur && <span className={styles.errorMsg}>⚠ {errors.secteur}</span>}
                 </div>
+
                 <div className={styles.formGroup}>
                   <label>Branche d'activité <span className={styles.req}>*</span></label>
-                  <select value={form.branche} onChange={set('branche')} disabled={!form.secteur}>
+                  <select
+                    value={form.branche}
+                    onChange={set('branche')}
+                    disabled={!form.secteur}
+                    className={errors.branche ? styles.inputError : ''}
+                  >
                     <option value="">-- Sélectionner --</option>
                     {branches.map(b => (
                       <option key={b} value={b}>{b}</option>
                     ))}
                   </select>
+                  {errors.branche && <span className={styles.errorMsg}>⚠ {errors.branche}</span>}
                 </div>
               </div>
 
-              {/* Badge activité prioritaire */}
               {form.branche && (
                 <div className={`${styles.prioritaireBadge} ${estPrioritaire ? styles.prioritaireOui : styles.prioritaireNon}`}>
                   {estPrioritaire ? (
-                    <> Cette branche est une <strong>activité prioritaire</strong> — prime supplémentaire de 10% éligible</>
+                    <><span className={styles.badgeIcon}>⚡</span> Cette branche est une <strong>activité prioritaire</strong> — prime supplémentaire de 10% éligible</>
                   ) : (
-                    <> Cette branche n'est pas classée activité prioritaire</>
+                    <><span className={styles.badgeIcon}>ℹ️</span> Cette branche n'est pas classée activité prioritaire</>
                   )}
                 </div>
               )}
@@ -296,7 +317,7 @@ export default function CalculateurPrimes() {
                     checked={form.activitePrioritaire}
                     onChange={set('activitePrioritaire')}
                   />
-                  <span>Cocher pour inclure la prime activités prioritaires (+10%)</span>
+                  <span>Inclure la prime activités prioritaires (+10%)</span>
                 </label>
               )}
             </div>
@@ -309,13 +330,19 @@ export default function CalculateurPrimes() {
               </div>
               <div className={styles.formGroup}>
                 <label>Province / Préfecture (Région Laâyoune-Sakia El Hamra) <span className={styles.req}>*</span></label>
-                <select value={form.province} onChange={set('province')}>
+                <select
+                  value={form.province}
+                  onChange={set('province')}
+                  className={errors.province ? styles.inputError : ''}
+                >
                   <option value="">-- Sélectionner --</option>
                   {Object.entries(PROVINCES_LSH).map(([p, cat]) => (
                     <option key={p} value={p}>{p} — Catégorie {cat} ({cat === 'A' ? '+10%' : '+15%'})</option>
                   ))}
                 </select>
+                {errors.province && <span className={styles.errorMsg}>⚠ {errors.province}</span>}
               </div>
+
               {form.province && (
                 <div className={`${styles.categorieBadge} ${PROVINCES_LSH[form.province] === 'A' ? styles.catA : styles.catB}`}>
                   Province <strong>{form.province}</strong> — Catégorie territoriale{' '}
@@ -338,12 +365,15 @@ export default function CalculateurPrimes() {
                     type="number"
                     placeholder="Ex: 5 000 000"
                     min="1000000"
-                    max="50000000"
+                    max="49999999"
                     value={form.investissement}
                     onChange={set('investissement')}
+                    className={errors.investissement ? styles.inputError : ''}
                   />
                   <span className={styles.hint}>Entre 1 000 000 et 50 000 000 MAD</span>
+                  {errors.investissement && <span className={styles.errorMsg}>⚠ {errors.investissement}</span>}
                 </div>
+
                 <div className={styles.formGroup}>
                   <label>Emplois stables prévus <span className={styles.req}>*</span></label>
                   <input
@@ -352,10 +382,10 @@ export default function CalculateurPrimes() {
                     min="1"
                     value={form.emplois}
                     onChange={set('emplois')}
+                    className={errors.emplois ? styles.inputError : ''}
                   />
-                  <span className={styles.hint}>
-                    CDI ≥ 18 mois, salariés marocains immatriculés CNSS
-                  </span>
+                  <span className={styles.hint}>CDI ≥ 18 mois, salariés marocains immatriculés CNSS</span>
+                  {errors.emplois && <span className={styles.errorMsg}>⚠ {errors.emplois}</span>}
                 </div>
               </div>
             </div>
@@ -365,11 +395,7 @@ export default function CalculateurPrimes() {
               <button className={styles.btnSecondary} onClick={handleReset}>
                 Réinitialiser
               </button>
-              <button
-                className={styles.btnPrimary}
-                onClick={handleCalculer}
-                disabled={!form.secteur || !form.branche || !form.province || !form.investissement || !form.emplois}
-              >
+              <button className={styles.btnPrimary} onClick={handleCalculer}>
                 Calculer mes primes →
               </button>
             </div>
@@ -379,9 +405,11 @@ export default function CalculateurPrimes() {
           <div className={styles.resultPanel}>
             {!result ? (
               <div className={styles.resultEmpty}>
-                
+                <div className={styles.emptyIcon}>🧮</div>
                 <p>Remplissez le formulaire et cliquez sur<br /><strong>« Calculer mes primes »</strong></p>
-                <p className={styles.emptyNote}>Simulation basée sur la Nouvelle Charte de l'Investissement — Décret n°2.25.342</p>
+                <p className={styles.emptyNote}>
+                  Simulation basée sur la Nouvelle Charte de l'Investissement — Décret n°2.25.342
+                </p>
               </div>
             ) : (
               <div className={styles.resultContent}>
@@ -400,17 +428,16 @@ export default function CalculateurPrimes() {
                 {/* Détail 3 primes */}
                 <div className={styles.primesDetail}>
 
-                  {/* Prime emploi */}
                   <div className={`${styles.primeItem} ${result.pctEmploi > 0 ? styles.primeItemActive : styles.primeItemInactive}`}>
                     <div className={styles.primeItemHeader}>
-                      
+                      <span className={styles.primeItemIcon}>👷</span>
                       <div>
                         <div className={styles.primeItemTitle}>Prime création d'emplois stables</div>
                         <div className={styles.primeItemSub}>
-                          Ratio : {result.ratio} emplois/MMAD
+                          Ratio : {result.ratio} emplois/MMAD —{' '}
                           {result.ratioEligible
-                            ? <span className={styles.ok}> ✓ Éligible</span>
-                            : <span className={styles.ko}> ✗ Ratio insuffisant (min {result.seuilMin})</span>
+                            ? <span className={styles.ok}>✓ Éligible</span>
+                            : <span className={styles.ko}>✗ Ratio insuffisant (min {result.seuilMin})</span>
                           }
                         </div>
                       </div>
@@ -422,17 +449,16 @@ export default function CalculateurPrimes() {
                     <div className={styles.primeItemAmount}>{formatMAD(result.montantEmploi)}</div>
                   </div>
 
-                  {/* Prime territoriale */}
                   <div className={`${styles.primeItem} ${result.pctTerrit > 0 ? styles.primeItemActive : styles.primeItemInactive}`}>
                     <div className={styles.primeItemHeader}>
-                      
+                      <span className={styles.primeItemIcon}>🗺️</span>
                       <div>
                         <div className={styles.primeItemTitle}>Prime territoriale</div>
                         <div className={styles.primeItemSub}>
-                          Province {form.province}
+                          Province {form.province} —{' '}
                           {result.categorie
-                            ? <span className={styles.ok}> — Catégorie {result.categorie} ✓</span>
-                            : <span className={styles.ko}> — Hors catégorie</span>
+                            ? <span className={styles.ok}>Catégorie {result.categorie} ✓</span>
+                            : <span className={styles.ko}>Hors catégorie</span>
                           }
                         </div>
                       </div>
@@ -444,10 +470,9 @@ export default function CalculateurPrimes() {
                     <div className={styles.primeItemAmount}>{formatMAD(result.montantTerrit)}</div>
                   </div>
 
-                  {/* Prime activités prioritaires */}
                   <div className={`${styles.primeItem} ${result.pctPrio > 0 ? styles.primeItemActive : styles.primeItemInactive}`}>
                     <div className={styles.primeItemHeader}>
-                      
+                      <span className={styles.primeItemIcon}>⚡</span>
                       <div>
                         <div className={styles.primeItemTitle}>Prime activités prioritaires</div>
                         <div className={styles.primeItemSub}>
@@ -468,7 +493,7 @@ export default function CalculateurPrimes() {
                   </div>
                 </div>
 
-                {/* Récap paramètres */}
+                {/* Récap */}
                 <div className={styles.recap}>
                   <div className={styles.recapTitle}>Paramètres utilisés</div>
                   <div className={styles.recapGrid}>
@@ -492,8 +517,7 @@ export default function CalculateurPrimes() {
                 </div>
 
                 <p className={styles.disclaimer}>
-                  ⚠️ Simulation indicative. Le montant définitif est arrêté après approbation
-                  de la CRUI. Le calcul sera effectué par l'API Spring Boot en production.
+                  ⚠️ Simulation indicative. Le montant définitif est arrêté après approbation de la CRUI.
                 </p>
               </div>
             )}

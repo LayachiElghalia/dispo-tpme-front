@@ -157,7 +157,7 @@ function CheckItem({ ok, warn, label }) {
               {/* Result */}
               {result && (
                 <div className={`${styles.resultBox} ${result.eligible ? styles.resultOk : styles.resultKo}`}>
-                  <h3>{result.eligible ? '✅ Votre entreprise est éligible !' : '❌ Conditions non remplies'}</h3>
+                  <h3>{result.eligible ? ' Votre entreprise est éligible !' : ' Conditions non remplies'}</h3>
                   <p>{result.eligible
                     ? 'Vous pouvez déposer une demande d\'appui auprès du CRI de votre région.'
                     : 'Veuillez corriger les points ci-dessous avant de soumettre votre demande.'
@@ -177,7 +177,7 @@ function CheckItem({ ok, warn, label }) {
             {/* ── Conditions sidebar ── */}
             <div className={styles.sidebar}>
               <div className={styles.sideCard} style={{ background: 'var(--navy-700)' }}>
-                <h4 className={styles.sideTitle} style={{ color: 'white' }}>🏢 Conditions entreprise</h4>
+                <h4 className={styles.sideTitle} style={{ color: 'white' }}> Conditions entreprise</h4>
                 {[
                   'CA annuel HT entre 1M et 200M MAD',
                   'Capital par société > 200M MAD : max 25%',
@@ -191,7 +191,7 @@ function CheckItem({ ok, warn, label }) {
               </div>
 
               <div className={styles.sideCard}>
-                <h4 className={styles.sideTitle}>📋 Conditions projet</h4>
+                <h4 className={styles.sideTitle}> Conditions projet</h4>
                 {[
                   'Investissement ≥ 1M MAD et < 50M MAD',
                   'Financement propre ≥ 10% du montant total',

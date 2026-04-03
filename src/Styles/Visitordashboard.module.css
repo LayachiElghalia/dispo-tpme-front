@@ -1,0 +1,514 @@
+/* VisitorDashboard.module.css */
+@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Barlow:wght@400;500;600&display=swap');
+
+/* ── Page ─────────────────────────────────────────────────────────────── */
+.page {
+  min-height: 100vh;
+  background: #f1f5f9;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: clamp(1rem, 4vw, 2rem) clamp(0.75rem, 4vw, 1.5rem);
+  font-family: 'Barlow', sans-serif;
+}
+
+/* ── Header ──────────────────────────────────────────────────────────── */
+.header {
+  width: 100%;
+  max-width: 760px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.75rem;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.brandLogo {
+  width: 36px;
+  height: 36px;
+  border-radius: 9px;
+  background: #0A1230;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.brandName {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #0f172a;
+  letter-spacing: -0.01em;
+}
+
+.headerSub {
+  font-size: 0.82rem;
+  color: #64748b;
+}
+
+/* ── Stepper ─────────────────────────────────────────────────────────── */
+.stepper {
+  width: 100%;
+  max-width: 760px;
+  display: flex;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  position: relative;
+}
+
+.stepItem {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  position: relative;
+}
+
+.stepItem:last-child { flex: 0; }
+
+.stepCircle {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 2px solid #cbd5e1;
+  background: #fff;
+  color: #94a3b8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.78rem;
+  font-weight: 700;
+  flex-shrink: 0;
+  z-index: 1;
+  transition: all 0.25s;
+}
+
+.stepDone {
+  background: #10b981;
+  border-color: #10b981;
+  color: #fff;
+}
+
+.stepActive {
+  background: #0A1230;
+  border-color: #0A1230;
+  color: #fff;
+}
+
+.stepLabel {
+  position: absolute;
+  top: 38px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.67rem;
+  color: #94a3b8;
+  white-space: nowrap;
+  font-weight: 500;
+}
+
+.stepLabelActive { color: #0f172a; font-weight: 600; }
+
+.stepLine {
+  flex: 1;
+  height: 2px;
+  background: #e2e8f0;
+  margin: 0 4px;
+  transition: background 0.25s;
+}
+
+.stepLineDone { background: #10b981; }
+
+/* ── Card ────────────────────────────────────────────────────────────── */
+.card {
+  width: 100%;
+  max-width: 760px;
+  background: #fff;
+  border-radius: 16px;
+  border: 0.5px solid #e2e8f0;
+  box-shadow: 0 2px 24px rgba(0,0,0,0.06);
+  padding: clamp(1.5rem, 5vw, 2.25rem) clamp(1.25rem, 5vw, 2rem);
+  margin-top: 1rem;
+  animation: fadeUp 0.35s ease both;
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Step content ────────────────────────────────────────────────────── */
+.stepContent { display: flex; flex-direction: column; gap: 1rem; }
+
+.stepTitle {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: clamp(1.3rem, 4vw, 1.65rem);
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0 0 0.15rem;
+  letter-spacing: -0.02em;
+}
+
+.stepSub { font-size: 0.85rem; color: #64748b; margin: 0; }
+
+/* ── Grid ────────────────────────────────────────────────────────────── */
+.grid2 {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+}
+
+@media (max-width: 560px) { .grid2 { grid-template-columns: 1fr; } }
+
+/* ── Field ───────────────────────────────────────────────────────────── */
+.field { display: flex; flex-direction: column; gap: 0.32rem; }
+
+.label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #334155;
+  letter-spacing: 0.01em;
+}
+
+.req { color: #ef4444; margin-left: 2px; }
+
+.input, .select, .textarea {
+  padding: 0.6rem 0.85rem;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  color: #0f172a;
+  background: #f8fafc;
+  transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+  outline: none;
+  font-family: 'Barlow', sans-serif;
+  width: 100%;
+}
+
+.input::placeholder, .textarea::placeholder { color: #94a3b8; }
+
+.input:focus, .select:focus, .textarea:focus {
+  border-color: #2563eb;
+  background: #fff;
+  box-shadow: 0 0 0 3px rgba(37,99,235,0.1);
+}
+
+.select { cursor: pointer; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 0.85rem center; padding-right: 2.2rem; }
+
+.textarea { resize: vertical; min-height: 80px; line-height: 1.5; }
+
+.err { font-size: 0.75rem; color: #ef4444; margin: 0; }
+
+/* ── Export row ──────────────────────────────────────────────────────── */
+.exportRow {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.5rem;
+}
+
+/* ── Buttons ─────────────────────────────────────────────────────────── */
+.btn {
+  padding: 0.7rem 1.5rem;
+  background: #0A1230;
+  color: #fff;
+  border: none;
+  border-radius: 9px;
+  font-size: 0.92rem;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: 'Barlow', sans-serif;
+  transition: background 0.2s, box-shadow 0.15s, transform 0.1s;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.btn:hover { background: #1d4ed8; box-shadow: 0 4px 14px rgba(37,99,235,0.25); }
+.btn:active { transform: scale(0.98); }
+
+.btnGreen {
+  composes: btn;
+  background: #059669;
+}
+.btnGreen:hover { background: #047857; box-shadow: 0 4px 14px rgba(5,150,105,0.25); }
+
+.btnGhost {
+  padding: 0.7rem 1.2rem;
+  background: transparent;
+  color: #64748b;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 9px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: 'Barlow', sans-serif;
+  transition: background 0.15s, border-color 0.15s;
+  min-height: 44px;
+}
+.btnGhost:hover { background: #f8fafc; border-color: #cbd5e1; }
+
+.btnOutline {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.62rem 1.1rem;
+  background: #fff;
+  color: #334155;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 9px;
+  font-size: 0.86rem;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: 'Barlow', sans-serif;
+  transition: background 0.15s, border-color 0.15s, box-shadow 0.15s;
+  min-height: 40px;
+}
+.btnOutline:hover { background: #f8fafc; border-color: #94a3b8; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+.btnOutline:disabled { opacity: 0.6; cursor: not-allowed; }
+
+/* ── Spinner ─────────────────────────────────────────────────────────── */
+.spinner {
+  display: inline-block;
+  width: 16px; height: 16px;
+  border: 2px solid rgba(51,65,85,0.2);
+  border-top-color: #334155;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ── Nav row ─────────────────────────────────────────────────────────── */
+.navRow {
+  display: flex;
+  align-items: center;
+  margin-top: 1.75rem;
+  padding-top: 1.25rem;
+  border-top: 0.5px solid #f1f5f9;
+}
+
+/* ── Print area ──────────────────────────────────────────────────────── */
+.printArea {
+  border: 0.5px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 1.75rem 2rem;
+  background: #fff;
+}
+
+.printHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding-bottom: 1.25rem;
+  border-bottom: 2px solid #0A1230;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.printLogo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.printBrandName {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.printMeta { text-align: right; }
+
+.printDocTitle {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0;
+}
+
+.printDate {
+  font-size: 0.76rem;
+  color: #64748b;
+  margin: 0.2rem 0 0;
+}
+
+.printSection {
+  margin-bottom: 1.5rem;
+}
+
+.printSectionTitle {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 0.98rem;
+  font-weight: 700;
+  color: #fff;
+  background: #0A1230;
+  padding: 0.4rem 0.85rem;
+  border-radius: 6px;
+  margin: 0 0 0.85rem;
+  letter-spacing: 0.02em;
+}
+
+.printGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0 1.5rem;
+}
+
+.recapRow {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  padding: 0.42rem 0;
+  border-bottom: 0.5px solid #f1f5f9;
+}
+
+.recapLabel {
+  font-size: 0.76rem;
+  color: #64748b;
+  font-weight: 600;
+  min-width: 130px;
+  flex-shrink: 0;
+}
+
+.recapValue {
+  font-size: 0.85rem;
+  color: #0f172a;
+  font-weight: 500;
+}
+
+.printBlock {
+  margin-top: 0.85rem;
+  background: #f8fafc;
+  border-radius: 8px;
+  border-left: 3px solid #2563eb;
+  padding: 0.75rem 1rem;
+}
+
+.printBlockLabel {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #2563eb;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin: 0 0 0.35rem;
+}
+
+.printBlockText {
+  font-size: 0.85rem;
+  color: #334155;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.printFooter {
+  display: flex;
+  gap: 2rem;
+  margin-top: 2rem;
+  padding-top: 1.25rem;
+  border-top: 0.5px solid #e2e8f0;
+  flex-wrap: wrap;
+}
+
+.printSigBox {
+  flex: 1;
+  min-width: 180px;
+}
+
+.printSigLabel {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #334155;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin: 0 0 0.5rem;
+}
+
+.printSigLine {
+  height: 40px;
+  border-bottom: 1.5px solid #cbd5e1;
+  margin-bottom: 0.4rem;
+}
+
+.printSigName {
+  font-size: 0.75rem;
+  color: #94a3b8;
+  margin: 0;
+}
+
+.printDisclaimer {
+  font-size: 0.68rem;
+  color: #94a3b8;
+  text-align: center;
+  margin-top: 1.25rem;
+  padding-top: 0.75rem;
+  border-top: 0.5px solid #f1f5f9;
+}
+
+/* ── Success ─────────────────────────────────────────────────────────── */
+.successCard {
+  text-align: center;
+  background: #fff;
+  border-radius: 16px;
+  border: 0.5px solid #e2e8f0;
+  padding: 3rem 2.5rem;
+  max-width: 480px;
+  width: 100%;
+  box-shadow: 0 2px 24px rgba(0,0,0,0.06);
+  animation: fadeUp 0.35s ease both;
+  margin-top: 3rem;
+}
+
+.successIcon {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: #dcfce7;
+  color: #16a34a;
+  font-size: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1.25rem;
+  font-weight: 700;
+}
+
+.successTitle {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0 0 0.65rem;
+}
+
+.successSub {
+  font-size: 0.9rem;
+  color: #64748b;
+  margin: 0 0 1.75rem;
+  line-height: 1.6;
+}
+
+/* ── Print media ─────────────────────────────────────────────────────── */
+@media print {
+  .page { padding: 0; background: #fff; }
+  #print-area { display: block !important; border: none; padding: 1cm; }
+  .printSectionTitle { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+}
+
+/* ── Responsive ──────────────────────────────────────────────────────── */
+@media (max-width: 600px) {
+  .stepper { overflow-x: auto; padding-bottom: 2rem; }
+  .stepLabel { display: none; }
+  .printGrid { grid-template-columns: 1fr; }
+  .printFooter { gap: 1rem; }
+  .exportRow { flex-direction: column; }
+  .btnOutline { width: 100%; justify-content: center; }
+}
